@@ -1,0 +1,252 @@
+<html>
+
+<head>Generate HKID Check Digit</head>
+	
+<body>
+<script type="text/javascript" src="./lib/ipaddr.js"></script>
+<script>
+function IsHKID() {
+
+    var strValidChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	var possibleChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	var possibleNum = "1234567890";
+	
+	var text = possibleChar.charAt(Math.floor(Math.random() * possibleChar.length));
+	
+	for (var i = 0; i < 6; i++)
+		text += possibleNum.charAt(Math.floor(Math.random() * possibleNum.length));
+	
+	var str = text;
+	
+    // basic check length
+    if (str.length < 6)
+        return false;
+  
+    // handling bracket
+//    if (str.charAt(str.length-3) == '(' && str.charAt(str.length-1) == ')')
+//        str = str.substring(0, str.length - 3) + str.charAt(str.length -2);
+
+    // convert to upper case
+    str = str.toUpperCase();
+
+    // regular expression to check pattern and split
+    var hkidPat = /^([A-Z]{1,2})([0-9]{6})$/;
+    var matchArray = str.match(hkidPat);
+
+    // not match, return false
+    if (matchArray == null)
+        return false;
+
+    // the character part, numeric part and check digit part
+    var charPart = matchArray[1];
+    var numPart = matchArray[2];
+    var checkDigit = matchArray[3];
+
+    // calculate the checksum for character part
+    var checkSum = 0;
+    if (charPart.length == 2) {
+        checkSum += 9 * (10 + strValidChars.indexOf(charPart.charAt(0)));
+        checkSum += 8 * (10 + strValidChars.indexOf(charPart.charAt(1)));
+    } else {
+        checkSum += 9 * 36;
+        checkSum += 8 * (10 + strValidChars.indexOf(charPart));
+    }
+
+    // calculate the checksum for numeric part
+    for (var i = 0, j = 7; i < numPart.length; i++, j--)
+        checkSum += j * numPart.charAt(i);
+
+    // verify the check digit
+    var remaining = checkSum % 11;
+	var result = 0;
+	
+	if(remaining == 1)
+		result = 'A';
+	else if(remaining == result)
+		result = 0;
+	else
+		result = 11 - remaining;
+    document.getElementById('checkdigit').innerHTML = "Result is :" + text + "<br />Check Digit is : (" +result+ ")"; 
+}
+
+function replaceNonWordNonSpace() {
+	var wordstr = document.getElementById('word').value;
+	var result = wordstr.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi,' ');
+	
+	document.getElementById('result').innerHTML = "Result is :" + result; 
+}
+
+function msToTimeAlert() {
+  var milisec = document.getElementById('milisec').value;
+//   var ms = milisec % 1000;
+//   milisec = (milisec - ms) / 1000;
+//   var secs = milisec % 60;
+//   milisec = (milisec - secs) / 60;
+//   var mins = milisec % 60;
+//   var hrs = (milisec - mins) / 60;
+
+  alert(Date.parse(milisec));
+}
+
+function genIPv6() {
+
+let classValues = [];
+var ipv4 = document.getElementById('ip').value;
+var parsedV4 = ipaddr.parse(ipv4);
+var ipv6 = parsedV4.toIPv4MappedAddress(); 
+
+document.getElementById('ipv6').innerHTML = "IPv6 is : " + ipv6.toString(); 
+//	if(ipv4.length){
+//	  classValues = ipv4.split('.');
+//	}
+//	if(classValues.length){  
+//	  let str = classValues.reduce((acc, val, ind)=>{
+//		let mod = +val >= 16 ? +val%16 : +val;
+//		let divider = +val >= 16 ? (val-mod)/16 : 0;
+//		const hexaCode = (hexaVal)=>{
+//		  switch(hexaVal){
+//		  case 10:
+//			hexaVal = 'A';
+//			break;
+//		  case 11:
+//			hexaVal = 'B';
+//			break;
+//		  case 12:
+//			hexaVal = 'C';
+//			break;
+//		  case 13:
+//			hexaVal = 'D';
+//			break;
+//		  case 14:
+//			hexaVal = 'E';
+//			break;
+//		  case 15:
+//			hexaVal = 'F';
+//			break;
+//		  default:
+//			hexaVal = hexaVal;
+//			break;
+//		}
+//		  return hexaVal;
+//		}
+//		mod = hexaCode(mod);
+//		divider = hexaCode(divider);
+//		return ind === 1 ? `${acc}${divider}${mod}:`:`${acc}${divider}${mod}`
+//	  },'')
+//	  document.getElementById('ipv6').innerHTML = `2002:${str}::`;
+//	} else {
+//		document.getElementById('ipv6').innerHTML = "Invalid IPv4";
+//	}
+}
+function decodeUri() {
+	
+	var encodedUri = document.getElementById('encodedUri').value;
+	document.getElementById('decoded_URL').innerHTML = decodeURIComponent(encodedUri);
+}
+
+function generateMark() {
+	
+	var mark6Str = "";
+	var mark6Arr = [];
+	var count = 0 ;
+	var seperator = ",";
+	while (count < 7) {
+		
+		
+		var res = Math.floor(Math.random() * 49) + 1;
+		if(mark6Arr.indexOf(res) == -1)
+		{
+			mark6Arr.push(res);
+			count++;
+		}
+	}
+	
+	var arrSizeCnt = 0;
+	while (arrSizeCnt < mark6Arr.length)
+	{
+		if(arrSizeCnt == 6)
+			seperator = "";
+			
+		mark6Str += mark6Arr[arrSizeCnt] + " " + seperator;
+		arrSizeCnt++;
+	}
+	
+	document.getElementById('mark6String').innerHTML = mark6Str;
+}
+		
+</script>
+
+<button type="button" onClick ="IsHKID();">Gen ID</button>
+<br />
+<br />
+<br />
+<div id ="checkdigit"> \Result will be displayed here/ </div> 
+
+<br />
+<br />
+<div id ="inputStr">
+<br />
+InputString to replace : <input type="text" id="word" />
+<br />
+<br />
+</div>
+
+<button type="button" onClick ="replaceNonWordNonSpace();">Replace Non Word Non Space</button>
+<br />
+<br />
+<br />
+<div id ="result"> \Replace Result will be displayed here/ </div> 
+<br />
+<br />
+<br />
+<div id ="inputStr">
+<br />
+Input IPv4 : <input type="text" id="ip" />
+<br />
+<br />
+<button type ="button" onClick ="genIPv6();">Generate IPv6</button>
+<br />
+<br />
+<div id ="ipv6"> \Result will be displayed here/ </div> 
+<br />
+<br />
+</div>
+<div id ="millisecondStr">
+<br />
+Input millisecond : <input type="text" id="milisec" />
+<br />
+<br />
+<button type ="button" onClick ="msToTimeAlert();">Generate Time</button>
+<br />
+<br />
+<div id ="time"> \Result will be displayed here/ </div> 
+<br />
+<br />
+</div>
+
+Input uri encoded Str : <input type="text" id="encodedUri" />
+<br />
+<br />
+<button type ="button" onClick ="decodeUri();">Decode</button>
+<br />
+<br />
+<div id ="decoded_URL"> \Result will be displayed here/ </div> 
+<br />
+<br />
+</div>
+
+Click the button to generate Mark 6 :
+<br />
+<br />
+<button type ="button" onClick ="generateMark();">Generate</button>
+<br />
+<br />
+<div id ="mark6String"> \Result will be displayed here/ </div> 
+<br />
+<br />
+</div>
+
+</body>
+
+
+</html>
