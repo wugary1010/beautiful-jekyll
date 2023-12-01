@@ -1,0 +1,403 @@
+<html>
+<body>
+<script type="text/javascript" src="./lib/ipaddr.js"></script>
+<script>
+function IsHKID() {
+
+    var strValidChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	var possibleChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	var possibleNum = "1234567890";
+	
+	var text = possibleChar.charAt(Math.floor(Math.random() * possibleChar.length));
+	
+	for (var i = 0; i < 6; i++)
+		text += possibleNum.charAt(Math.floor(Math.random() * possibleNum.length));
+	
+	var str = text;
+	
+    // basic check length
+    if (str.length < 6)
+        return false;
+  
+    // handling bracket
+//    if (str.charAt(str.length-3) == '(' && str.charAt(str.length-1) == ')')
+//        str = str.substring(0, str.length - 3) + str.charAt(str.length -2);
+
+    // convert to upper case
+    str = str.toUpperCase();
+
+    // regular expression to check pattern and split
+    var hkidPat = /^([A-Z]{1,2})([0-9]{6})$/;
+    var matchArray = str.match(hkidPat);
+
+    // not match, return false
+    if (matchArray == null)
+        return false;
+
+    // the character part, numeric part and check digit part
+    var charPart = matchArray[1];
+    var numPart = matchArray[2];
+    var checkDigit = matchArray[3];
+
+    // calculate the checksum for character part
+    var checkSum = 0;
+    if (charPart.length == 2) {
+        checkSum += 9 * (10 + strValidChars.indexOf(charPart.charAt(0)));
+        checkSum += 8 * (10 + strValidChars.indexOf(charPart.charAt(1)));
+    } else {
+        checkSum += 9 * 36;
+        checkSum += 8 * (10 + strValidChars.indexOf(charPart));
+    }
+
+    // calculate the checksum for numeric part
+    for (var i = 0, j = 7; i < numPart.length; i++, j--)
+        checkSum += j * numPart.charAt(i);
+
+    // verify the check digit
+    var remaining = checkSum % 11;
+	var result = 0;
+	
+	if(remaining == 1)
+		result = 'A';
+	else if(remaining == result)
+		result = 0;
+	else
+		result = 11 - remaining;
+    document.getElementById('checkdigit').value = "Random HKID is :" + text + " ("+result+ ")"; 
+}
+
+function replaceNonWordNonSpace() {
+	var wordstr = document.getElementById('word').value;
+	var result = wordstr.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi,' ');
+	
+	document.getElementById('result').value = "Result is :" + result; 
+}
+
+function msToTimeAlert() {
+  var milisec = document.getElementById('milisec').value;
+//   var ms = milisec % 1000;
+//   milisec = (milisec - ms) / 1000;
+//   var secs = milisec % 60;
+//   milisec = (milisec - secs) / 60;
+//   var mins = milisec % 60;
+//   var hrs = (milisec - mins) / 60;
+
+  alert(Date.parse(milisec));
+}
+
+function genIPv6() {
+
+let classValues = [];
+var ipv4 = document.getElementById('ip').value;
+var parsedV4 = ipaddr.parse(ipv4);
+var ipv6 = parsedV4.toIPv4MappedAddress(); 
+
+document.getElementById('ipv6').innerHTML = "IPv6 is : " + ipv6.toString(); 
+//	if(ipv4.length){
+//	  classValues = ipv4.split('.');
+//	}
+//	if(classValues.length){  
+//	  let str = classValues.reduce((acc, val, ind)=>{
+//		let mod = +val >= 16 ? +val%16 : +val;
+//		let divider = +val >= 16 ? (val-mod)/16 : 0;
+//		const hexaCode = (hexaVal)=>{
+//		  switch(hexaVal){
+//		  case 10:
+//			hexaVal = 'A';
+//			break;
+//		  case 11:
+//			hexaVal = 'B';
+//			break;
+//		  case 12:
+//			hexaVal = 'C';
+//			break;
+//		  case 13:
+//			hexaVal = 'D';
+//			break;
+//		  case 14:
+//			hexaVal = 'E';
+//			break;
+//		  case 15:
+//			hexaVal = 'F';
+//			break;
+//		  default:
+//			hexaVal = hexaVal;
+//			break;
+//		}
+//		  return hexaVal;
+//		}
+//		mod = hexaCode(mod);
+//		divider = hexaCode(divider);
+//		return ind === 1 ? `${acc}${divider}${mod}:`:`${acc}${divider}${mod}`
+//	  },'')
+//	  document.getElementById('ipv6').innerHTML = `2002:${str}::`;
+//	} else {
+//		document.getElementById('ipv6').innerHTML = "Invalid IPv4";
+//	}
+}
+function decodeUri() {
+	
+	var encodedUri = document.getElementById('encodedUri').value;
+	document.getElementById('decoded_URL').value = decodeURIComponent(encodedUri);
+}
+
+function generateMark() {
+	
+	var mark6Str = "";
+	var mark6Arr = [];
+	var count = 0 ;
+	var seperator = ",";
+	while (count < 7) {
+		
+		
+		var res = Math.floor(Math.random() * 49) + 1;
+		if(mark6Arr.indexOf(res) == -1)
+		{
+			mark6Arr.push(res);
+			count++;
+		}
+	}
+	
+	var arrSizeCnt = 0;
+	while (arrSizeCnt < mark6Arr.length)
+	{
+		if(arrSizeCnt == 6)
+			seperator = "";
+			
+		mark6Str += mark6Arr[arrSizeCnt] + " " + seperator;
+		arrSizeCnt++;
+	}
+	
+	document.getElementById('mark6String').innerHTML = mark6Str;
+}
+		
+</script>
+<div class="formbold-main-wrapper">
+  <!-- Author: FormBold Team -->
+  <!-- Learn More: https://formbold.com -->
+  <div class="formbold-form-wrapper">
+      <div class="formbold-mb-5">
+        <label for="name" class="formbold-form-label"> Random HKID </label>
+		<div>
+        <button class="formbold-btn" onClick ="IsHKID();">Generate HKID</button>
+		</div>
+		<input
+          type="text"
+          name="checkdigit"
+          id="checkdigit"
+          class="formbold-form-input"
+        />
+      </div>
+      <div class="formbold-mb-5">
+        <label for="phone" class="formbold-form-label"> InputString to replace : </label>
+        <input
+          type="text"
+          name="word"
+          id="word"
+          placeholder="Enter text that you want to remove non word non space"
+          class="formbold-form-input"
+        />
+		<div>
+        <button class="formbold-btn" onClick ="replaceNonWordNonSpace();">Replace Non Word Non Space</button>
+		<input
+          type="text"
+          name="result"
+          id="result"
+          class="formbold-form-input"
+        />
+		</div>
+      </div>
+      <div class="formbold-mb-5">
+        <label for="name" class="formbold-form-label"> Input millisecond : </label>
+        <input
+          type="text"
+          name="milisec"
+          id="milisec"
+          placeholder="Enter milisec that you want to convert to time"
+          class="formbold-form-input"
+        />
+		<div>
+        <button class="formbold-btn" onClick ="msToTimeAlert();">Convert Millisecond to time</button>
+		<input
+          type="text"
+          name="time"
+          id="time"
+          class="formbold-form-input"
+        />
+		</div>
+      </div>
+      <div class="formbold-mb-5">
+        <div class="formbold-mb-5">
+			<label for="name" class="formbold-form-label"> Input uri encoded Str : </label>
+			<input
+			  type="text"
+			  name="encodedUri"
+			  id="encodedUri"
+			  class="formbold-form-input"
+			/>
+		<div>
+			<button class="formbold-btn" onClick ="decodeUri();">Decode Uri</button>
+			<input
+			  type="text"
+			  name="decoded_URL"
+			  id="decoded_URL"
+			  class="formbold-form-input"
+			/>
+		</div>
+      </div>
+
+      <div class="formbold-mb-5 formbold-pt-3">
+        <label class="formbold-form-label formbold-form-label-2">
+          Address Details
+        </label>
+        <div class="flex flex-wrap formbold--mx-3">
+          <div class="w-full sm:w-half formbold-px-3">
+            <div class="formbold-mb-5">
+              <input
+                type="text"
+                name="area"
+                id="area"
+                placeholder="Enter area"
+                class="formbold-form-input"
+              />
+            </div>
+          </div>
+          <div class="w-full sm:w-half formbold-px-3">
+            <div class="formbold-mb-5">
+              <input
+                type="text"
+                name="city"
+                id="city"
+                placeholder="Enter city"
+                class="formbold-form-input"
+              />
+            </div>
+          </div>
+          <div class="w-full sm:w-half formbold-px-3">
+            <div class="formbold-mb-5">
+              <input
+                type="text"
+                name="state"
+                id="state"
+                placeholder="Enter state"
+                class="formbold-form-input"
+              />
+            </div>
+          </div>
+          <div class="w-full sm:w-half formbold-px-3">
+            <div class="formbold-mb-5">
+              <input
+                type="text"
+                name="post-code"
+                id="post-code"
+                placeholder="Post Code"
+                class="formbold-form-input"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <button class="formbold-btn">Book Appointment</button>
+      </div>
+  </div>
+</div>
+<style>
+  * {
+    margin: 5;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: "Inter", Arial, Helvetica, sans-serif;
+  }
+  .formbold-mb-5 {
+    margin-bottom: 20px;
+  }
+  .formbold-pt-3 {
+    padding-top: 12px;
+  }
+  .formbold-main-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+  }
+
+  .formbold-form-wrapper {
+    margin: 0 auto;
+    max-width: 550px;
+    width: 100%;
+    background: white;
+  }
+  .formbold-form-label {
+    display: block;
+    font-weight: 500;
+    font-size: 16px;
+    color: #07074d;
+    margin-bottom: 12px;
+  }
+  .formbold-form-label-2 {
+    font-weight: 600;
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .formbold-form-input {
+    width: 100%;
+    padding: 12px 24px;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    background: white;
+    font-weight: 500;
+    font-size: 16px;
+    color: #6b7280;
+    outline: none;
+    resize: none;
+  }
+  .formbold-form-input:focus {
+    border-color: #6a64f1;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .formbold-btn {
+    text-align: center;
+    font-size: 16px;
+    border-radius: 6px;
+    padding: 14px 32px;
+    border: none;
+    font-weight: 600;
+    background-color: #6a64f1;
+    color: white;
+    width: 100%;
+    cursor: pointer;
+  }
+  .formbold-btn:hover {
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .formbold--mx-3 {
+    margin-left: -12px;
+    margin-right: -12px;
+  }
+  .formbold-px-3 {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .flex {
+    display: flex;
+  }
+  .flex-wrap {
+    flex-wrap: wrap;
+  }
+  .w-full {
+    width: 100%;
+  }
+  @media (min-width: 540px) {
+    .sm\:w-half {
+      width: 50%;
+    }
+  }
+</style>
+</html>
