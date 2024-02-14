@@ -4,7 +4,13 @@
 	
 <body>
 <script>
-    window.DD_RUM && window.DD_RUM.init({
+  (function(h,o,u,n,d) {
+    h=h[d]=h[d]||{q:[],onReady:function(c){h.q.push(c)}}
+    d=o.createElement(u);d.async=1;d.src=n
+    n=o.getElementsByTagName(u)[0];n.parentNode.insertBefore(d,n)
+  })(window,document,'script','https://www.datadoghq-browser-agent.com/us5/v5/datadog-rum.js','DD_RUM')
+  window.DD_RUM.onReady(function() {
+    window.DD_RUM.init({
       clientToken: 'pubc88999634c708e771a97bbc3bbcc29c1',
       applicationId: '05920845-978b-41d6-a317-a8ca6fec0b85',
       site: 'us5.datadoghq.com',
@@ -19,6 +25,7 @@
       trackLongTasks: true,
       defaultPrivacyLevel: 'mask-user-input',
     });
+  })
 </script>
 <script>
 function IsHKID() {
