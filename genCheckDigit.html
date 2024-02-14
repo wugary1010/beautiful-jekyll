@@ -3,6 +3,23 @@
 <head>Generate HKID Check Digit</head>
 	
 <body>
+<script>
+    window.DD_RUM && window.DD_RUM.init({
+      clientToken: 'pubc88999634c708e771a97bbc3bbcc29c1',
+      applicationId: '05920845-978b-41d6-a317-a8ca6fec0b85',
+      site: 'us5.datadoghq.com',
+      service: 'jeklly',
+      env: 'prd',
+      // Specify a version number to identify the deployed version of your application in Datadog
+      version: '1.0.0', 
+      sessionSampleRate: 100,
+      sessionReplaySampleRate: 20,
+      trackUserInteractions: true,
+      trackResources: true,
+      trackLongTasks: true,
+      defaultPrivacyLevel: 'mask-user-input',
+    });
+</script>
 <script type="text/javascript" src="./lib/ipaddr.js"></script>
 <script>
 function IsHKID() {
