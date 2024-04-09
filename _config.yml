@@ -13,6 +13,7 @@ author: Some Person
 
 navbar-links:
   About Me: "aboutme"
+  Gen HKID Check Digit: "https://wugary1010.github.io/beautiful-jekyll/genCheckDigit.html"
   Resources:
     - Beautiful Jekyll: "https://beautifuljekyll.com"
     - Learn markdown: "https://www.markdowntutorial.com/"
